@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f5ef">
+  <meta name="description" content="A local-first CSV quality check for CRM imports. Map fields, catch common data issues, and export a clean handoff.">
+  <title>Import Preflight — CRM data, checked before takeoff</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div class="page-shell">
+    <header class="topbar">
+      <a class="brand" href="./" aria-label="Import Preflight home">
+        <span class="brand-mark" aria-hidden="true"><span></span><span></span><span></span><span></span></span>
+        <span>IMPORT<span class="brand-light"> PREFLIGHT</span></span>
+      </a>
+      <div class="topbar-right">
+        <span class="local-chip"><span class="live-dot"></span>LOCAL ONLY</span>
+        <a class="source-link" href="https://github.com/tatitoxt/crm-import-preflight" target="_blank" rel="noreferrer">SOURCE <span aria-hidden="true">↗</span></a>
+      </div>
+    </header>
+    <main>
+      <section class="hero">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="eyebrow-line"></span> A QUIETER WAY TO MIGRATE DATA</p>
+          <h1>Give your CRM<br><em>better first data.</em></h1>
+          <p class="hero-description">Check a CSV before it becomes a cleanup project. Map the fields, catch obvious problems, and hand off rows with a little more confidence.</p>
+          <div class="hero-meta"><span>01 / INSPECT</span><span>02 / REVIEW</span><span>03 / EXPORT</span></div>
+        </div>
+        <div class="hero-art" aria-hidden="true">
+          <div class="flight-card">
+            <div class="flight-card-top"><span>DATA FLIGHT PLAN</span><span>NO. 001</span></div>
+            <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+            <div class="flight-path"></div>
+            <div class="flight-node node-one"><span>CSV</span></div>
+            <div class="flight-node node-two"><span>CRM</span></div>
+            <div class="flight-center"><span>✓</span></div>
+            <div class="flight-card-bottom"><span>CHECK BEFORE IMPORT</span><span>↗</span></div>
+          </div>
+          <span class="art-note note-top">LESS CLEANUP<br>AFTER LAUNCH</span>
+          <span class="art-note note-bottom">BROWSER-BASED<br>BY DESIGN</span>
+        </div>
+      </section>
+      <section class="workspace" aria-labelledby="workspace-title">
+        <div class="workspace-heading">
+          <div><p class="eyebrow"><span class="eyebrow-line"></span> PREFLIGHT DESK</p><h2 id="workspace-title">Start with a file.</h2></div>
+          <button id="sampleButton" class="text-button" type="button">Try a sample <span aria-hidden="true">↗</span></button>
+        </div>
+        <div id="dropZone" class="drop-zone" tabindex="0" role="group" aria-label="File upload area">
+          <input id="fileInput" type="file" accept=".csv,text/csv" hidden>
+          <div class="upload-icon" aria-hidden="true">↥</div>
+          <div class="drop-copy"><strong>Drop your CSV here</strong><span>or <button id="browseButton" type="button" class="inline-button">browse files</button> · CSV up to 10 MB</span></div>
+          <span class="drop-format">.CSV</span>
+        </div>
+        <p id="fileMessage" class="file-message" role="status" aria-live="polite">Your file stays in this tab. It is not uploaded or saved.</p>
+        <div id="mappingPanel" class="mapping-panel hidden">
+          <div class="mapping-heading"><div><span class="section-kicker">FIELD MAP</span><strong>Tell us what each column means.</strong></div><span id="fileName" class="file-name"></span></div>
+          <div class="mapping-grid">
+            <label class="map-field required-field">Email <span>required</span><select id="mapEmail"></select></label>
+            <label class="map-field">First name<select id="mapFirstName"></select></label>
+            <label class="map-field">Last name<select id="mapLastName"></select></label>
+            <label class="map-field">Company<select id="mapCompany"></select></label>
+          </div>
+          <div class="mapping-footer"><span class="mapping-hint">We check required email, format and duplicates. Names and company are optional.</span><button id="checkButton" class="primary-button" type="button">Run checks <span aria-hidden="true">→</span></button></div>
+        </div>
+        <section id="resultsPanel" class="results-panel hidden" aria-labelledby="results-title">
+          <div class="results-heading"><div><p class="section-kicker">CHECK COMPLETE</p><h3 id="results-title">Here’s what needs a look.</h3></div><button id="resetButton" class="text-button" type="button">Start over <span aria-hidden="true">↺</span></button></div>
+          <div class="summary-grid">
+            <div class="summary-card ready-card"><span>READY</span><strong id="readyCount">0</strong><small>rows with no flagged issues</small></div>
+            <div class="summary-card review-card"><span>REVIEW</span><strong id="reviewCount">0</strong><small>rows to check before import</small></div>
+            <div class="summary-card total-card"><span>IN FILE</span><strong id="totalCount">0</strong><small>non-empty data rows</small></div>
+          </div>
+          <div class="table-toolbar">
+            <div class="filter-tabs" role="group" aria-label="Filter rows">
+              <button class="filter-tab active" data-filter="all" type="button">All <span id="allTabCount">0</span></button>
+              <button class="filter-tab" data-filter="ready" type="button">Ready <span id="readyTabCount">0</span></button>
+              <button class="filter-tab" data-filter="review" type="button">Review <span id="reviewTabCount">0</span></button>
+            </div>
+            <span class="table-note">Showing up to 100 rows</span>
+          </div>
+          <div class="table-wrap"><table><thead id="tableHead"></thead><tbody id="tableBody"></tbody></table></div>
+          <div class="export-bar">
+            <div><strong>Ready for the next step?</strong><span>Download a clean file or a separate review list.</span></div>
+            <div class="export-actions"><button id="exportReview" class="secondary-button" type="button">Export review CSV <span aria-hidden="true">↓</span></button><button id="exportReady" class="primary-button" type="button">Export ready CSV <span aria-hidden="true">↓</span></button></div>
+          </div>
+        </section>
+      </section>
+      <section class="bottom-note">
+        <div class="note-icon" aria-hidden="true">◎</div>
+        <div><strong>Private by default. Useful by design.</strong><p>Import Preflight reads the selected file in your browser. There is no account, server upload, database, or analytics script.</p></div>
+        <span class="note-index">A SMALL TOOL FOR MESSY MIGRATIONS</span>
+      </section>
+    </main>
+    <footer class="footer"><span>BUILT FOR THE PART BEFORE “IMPORT”.</span><span>CSV IN · CLEANER HANDOFF OUT</span></footer>
+  </div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
